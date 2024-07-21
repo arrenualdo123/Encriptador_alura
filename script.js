@@ -1,3 +1,15 @@
+// Función para mostrar notificaciones internas
+function mostrarNotificacion(mensaje) {
+  const notification = document.getElementById('notification');
+  notification.textContent = mensaje;
+  notification.classList.add('show');
+
+  // Oculta la notificación después de 3 segundos
+  setTimeout(() => {
+    notification.classList.remove('show');
+  }, 3000);
+}
+
 // Función para encriptar el texto
 function encriptar() {
   procesarTexto(3, 'Texto encriptado');
@@ -12,15 +24,8 @@ function desencriptar() {
 function procesarTexto(shift, mensaje) {
   const texto = document.getElementById('texto').value;
 
-  if (!texto) {
-    mostrarNotificacion('No hay nada escrito para procesar.');
-    return;
-  }
-
-  if (!/^[a-z\s]*$/.test(texto)) {
-    mostrarNotificacion('Solo se permiten letras minúsculas y sin acentos.');
-    return;
-  }
+  if (!texto) return mostrarNotificacion('No hay nada escrito para procesar.');
+  if (!/^[a-z\s]*$/.test(texto)) return mostrarNotificacion('Solo se permiten letras minúsculas y sin acentos.');
 
   const textoProcesado = cifradoCesar(texto, shift);
 
@@ -41,31 +46,11 @@ function cifradoCesar(str, shift) {
 }
 
 // Función para copiar texto al portapapeles
-function copiarTexto() {  
+function copiarTexto() {
   navigator.clipboard.writeText(document.getElementById('parrafo').textContent)
     .then(() => mostrarNotificacion('Texto copiado al portapapeles.'))
     .catch(err => console.error('Error al copiar el texto: ', err));
 }
-
-// Función para mostrar notificaciones
-function mostrarNotificacion(mensaje) {
-  if (Notification.permission === 'granted') {
-    new Notification(mensaje);
-  } else if (Notification.permission !== 'denied') {
-    Notification.requestPermission().then(permission => {
-      if (permission === 'granted') {
-        new Notification(mensaje);
-      }
-    });
-  }
-}
-
-// Manejo de permisos de notificación al cargar la página
-document.addEventListener('DOMContentLoaded', () => {
-  if (Notification.permission !== 'granted') {
-    Notification.requestPermission();
-  }
-});
 
 // Funcionalidad para cambiar al modo oscuro al hacer clic en el logo
 document.getElementById('logo').addEventListener('click', () => {
@@ -75,5 +60,5 @@ document.getElementById('logo').addEventListener('click', () => {
 
 
 
-  
-  
+
+
